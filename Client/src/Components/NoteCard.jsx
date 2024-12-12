@@ -6,7 +6,7 @@ const NoteCard = ({
     title,date,content,tags,isPinned,onEdit,onDelete,onPinNote
 }) => {
   return (
-    <div className='flex flex-col items-start justify-center p-2 duration-300 border border-gray-300 hover:transform hover:scale-105 hover:shadow-[rgba(17,_17,_26,_0.1)_0px_0px_16px]'>
+    <div className='flex flex-col items-start justify-center rounded-md p-2 duration-300 border border-gray-300 hover:transform hover:scale-105 hover:shadow-[rgba(17,_17,_26,_0.1)_0px_0px_16px]'>
         <div className='w-[80%] mx-auto flex items-center justify-between'>
             <div>
                 <h6 className='text-xl font-semibold'>{title}</h6>
@@ -18,8 +18,8 @@ const NoteCard = ({
         <div className='w-[80%] mx-auto flex items-center justify-between'>
             <div className='flex items-center gap-2 mt-2 text-gray-500'>{tags}</div>
             <div className='flex items-center gap-2'>
-                <FiEdit3 onClick={onEdit}/>
-                <FaTrash onClick={onDelete}/>
+                <FiEdit3 onClick={onEdit} className='text-xl font-semibold cursor-pointer hover:text-blue-500'/>
+                <FaTrash onClick={onDelete} className='text-xl font-semibold cursor-pointer hover:text-red-500'/>
             </div>
         </div>
     </div>
