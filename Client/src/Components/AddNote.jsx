@@ -1,10 +1,37 @@
 import React, { useState } from 'react'
 import InputTags from './InputTags'
 import { RxCross2 } from "react-icons/rx";
-const AddNote = ({onClose}) => {
+const AddNote = ({noteData, type, onClose}) => {
     const [title, setTitle] = useState('');
     const [content, setContent] = useState('');
     const [tags, setTags] = useState([]);
+    const [error, setError] = useState(null);
+
+
+    const AddNote = async () => {
+        
+    }
+
+    const editNote = async () => {
+        
+    }
+    const handleAddNote = () => {
+        if(!title){
+            setError("Please Enter a title.");
+            return;
+        }
+        if(!content){
+            setError("Please Enter a content.");
+            return;
+        }
+        setError(null);
+
+        if(type == 'edit'){
+            editNote();
+        }else{
+            AddNote();
+        }
+    }
     return (
         <div className='relative'>
             <button
@@ -37,7 +64,13 @@ const AddNote = ({onClose}) => {
                 <label className='text-2xl font-bold text-gray-500'>TAGS:</label>
                 <InputTags tags={tags} setTags={setTags} />
             </div>
-            <button className='flex items-center justify-center w-full py-2 mt-4 text-white bg-red-600 rounded-md'>Add</button>
+
+            {error && <p className='mx-5 my-2 text-red-600'>{error}</p>}
+            <button 
+            onClick={handleAddNote}
+            className='flex items-center justify-center w-full py-2 mt-4 text-white bg-red-600 rounded-md'>
+                Add
+            </button>
         </div>
     )
 }

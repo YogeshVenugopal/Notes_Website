@@ -56,6 +56,8 @@ const Home = () => {
           transition={{ duration: 0.5, ease: "easeIn" }}
         >
           <AddNote
+          type={openAddNotes.type}
+          noteData={openAddNotes.data}
             onClose={() => { setOpenAddNotes({ isShown: false, type: "add", data: null }) }}
           />
         </motion.div>
