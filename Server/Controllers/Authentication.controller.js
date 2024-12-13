@@ -52,3 +52,26 @@ export const loginUser = async (req, res) => {
         return res.status(500).json({ error: "Internal server error." });
     }
 };
+
+export const getUser = async (req, res) => {
+    try {
+        const user = req.user;
+
+        const isUser = await User.findById(user.id);
+        if(!isUser) {
+            return res.status(404).json({ error: "User not found." });
+        }
+        return res.status(200).json({ 
+            user:{
+                id: isUser._id,
+                name: isUser.name,
+                email: isUser.email,
+                createOn: isUser.createdOn
+            }
+            
+        , message: "User fetched successfully." });
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({ error: "Internal server error." });
+    }
+}
