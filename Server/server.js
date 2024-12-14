@@ -15,9 +15,14 @@ const app = express();
 const port = process.env.PORT || 5000;
 
 app.use(express.json());
-app.use(cors({origin:"*"}));
+app.use(cors({
+    origin: 'http://localhost:5173', // Replace with your frontend's actual URL
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+}));
+
 app.use(AuthenticationRoute)
-app.use(NoteRoute)
+app.use(NoteRoute) 
 
 app.listen(port, () => console.log(`Server is running on port ${port}`));
 
