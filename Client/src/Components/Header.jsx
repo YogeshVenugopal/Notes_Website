@@ -4,7 +4,7 @@ import ProfileInfo from '../Components/ProfileInfo'
 import { useNavigate } from 'react-router-dom';
 import SerachBox from '../Components/SerachBox';
 
-const Header = () => {
+const Header = ({userInfo}) => {
   const [searchQuery, setSearchQuery] = useState('');
   const navigate = useNavigate();
   const handleSearch = () => {
@@ -14,6 +14,7 @@ const Header = () => {
     setSearchQuery('');
   }
   const handleLogout = () => {
+    localStorage.clear();
     navigate('/login');
   }
   return (
@@ -28,7 +29,7 @@ const Header = () => {
           otes Website
         </h1>
         <SerachBox value={searchQuery} onChange={({ target }) => { setSearchQuery(target.value) }} handleSearch={handleSearch} handleClear={handleClear} />
-        <ProfileInfo onLogout={() => { handleLogout() }} />
+        <ProfileInfo userInfo={userInfo} onLogout={() => { handleLogout() }} />
       </div>
     </motion.div>
   )

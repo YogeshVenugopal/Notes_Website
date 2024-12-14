@@ -15,39 +15,43 @@ const Home = () => {
   });
   const [userInfo, setUserInfo] = useState(null);
   const navigate = useNavigate();
-
-  const getUserInfo = async()=>{
-    try {
-      const response = await axiosInstance.get('/get-user');
-      if(response.data && response.data.user){
-        setUserInfo(response.data.user);
-      }
-    } catch (error) {
-      if(error.response.status === 401){
-        localStorage.clear();
-        navigate('/login');
-      }
-    }
-  }
-  useEffect(() => {
-    
-    getUserInfo();
-    return () => {
-      
-    }
-  }, [])
-  
   const [isPin, setIsPin] = useState(false);
   const onPinNote = () => {
     setIsPin(!isPin)
   }
   const onDelete = () => { }
   const onEdit = () => { }
+  const getUserInfo = async () => {
+    try {
+      const response = await axiosInstance.get('/get-user');
+      if (response.data && response.data.user) {
+        setUserInfo(response.data.user);
+      } else {
+        console.log("User not found");
+      }
+    } catch (error) {
+      console.log("Error fetching user info:", error);
+      if (error.response.status === 401) {
+        localStorage.clear();
+        navigate('/login');
+      } else {
+        console.log("Error fetching user info:", error);
+      }
+    }
+  }
+  useEffect(() => {
+    console.log("Fetching user info...");
+    getUserInfo(); // Fetch user info on component mount
+  }, []);  // Empty dependency array ensures this runs once
+  if (userInfo === null) {
+    return <div>Loading user info...</div>;
+  }
+
   return (
     <>
-      <Header />
+      <Header userInfo={userInfo} />
       <div className="container mx-auto">
-        <div className='grid grid-cols-3 gap-5 mt-5 '>
+        <div className='grid grid-cols-1 gap-5 mt-5 md:grid-cols-3'>
           <NoteCard
             title={"Finish the project"}
             date={"27-Dec-2024"}
@@ -82,8 +86,8 @@ const Home = () => {
           transition={{ duration: 0.5, ease: "easeIn" }}
         >
           <AddNote
-          type={openAddNotes.type}
-          noteData={openAddNotes.data}
+            type={openAddNotes.type}
+            noteData={openAddNotes.data}
             onClose={() => { setOpenAddNotes({ isShown: false, type: "add", data: null }) }}
           />
         </motion.div>
