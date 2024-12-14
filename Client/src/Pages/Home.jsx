@@ -1,16 +1,42 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import Header from '../Components/Header'
 import { MdOutlineAdd } from "react-icons/md";
 import NoteCard from '../Components/NoteCard'
 import AddNote from '../Components/AddNote';
 import Modal from 'react-modal';
+import { useNavigate } from 'react-router-dom';
+import axiosInstance from '../utils/axiosInstance';
 const Home = () => {
   const [openAddNotes, setOpenAddNotes] = useState({
     isShown: false,
     type: "add",
     data: null
   });
+  const [userInfo, setUserInfo] = useState(null);
+  const navigate = useNavigate();
+
+  const getUserInfo = async()=>{
+    try {
+      const response = await axiosInstance.get('/get-user');
+      if(response.data && response.data.user){
+        setUserInfo(response.data.user);
+      }
+    } catch (error) {
+      if(error.response.status === 401){
+        localStorage.clear();
+        navigate('/login');
+      }
+    }
+  }
+  useEffect(() => {
+    
+    getUserInfo();
+    return () => {
+      
+    }
+  }, [])
+  
   const [isPin, setIsPin] = useState(false);
   const onPinNote = () => {
     setIsPin(!isPin)

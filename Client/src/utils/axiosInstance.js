@@ -8,13 +8,16 @@ const axiosInstance = axios.create({
         'Content-Type': 'application/json'
     }
 });
+
 axiosInstance.interceptors.request.use((config) => {
-    console.log('Request Config:', config); // Log request details
+    console.log('Request Config:', config); 
     const accessToken = localStorage.getItem('accessToken');
     if (accessToken) {
-        config.headers.Authorization = `Bearer ${accessToken}`;
+        config.headers['Authorization'] = `Bearer ${accessToken}`;
     }
     return config;
+}, (error) => {
+    return Promise.reject(error);
 });
 
 export default axiosInstance;
