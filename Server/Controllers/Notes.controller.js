@@ -55,6 +55,9 @@ export const editNote = async(req,res) => {
 export const getNotes = async(req,res) => {
     const user = req.user;
     try {
+        if (!req.user || !req.user.id) {
+            return res.status(403).json({ error: "User not authorized." });
+        }
         const notes = await Note.find({userId:user.id}).sort({isPinned:-1});
         res.status(200).json({notes,message:"Notes fetched successfully."});
     } catch (error) {
@@ -100,6 +103,30 @@ export const updatePinned = async(req,res) => {
         note.isPinned = !note.isPinned;
         await note.save();
         res.status(200).json({note, message:"Note updated successfully."});
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({error:"Internal server error."});
+    }
+}
+
+export const searchNotes = async(req,res) => {
+    const user = req.user;
+    const {query} = req.query;
+    if(!query){
+        return res.status(400).json({error:"Query is required."});
+    }
+    try {
+        const matchingNotes = await Note.find({
+            userId:user.id,
+            $or:[
+                {title:{$regex:new RegExp(query,"i")}},
+                {content:{$regex:new RegExp(query,"i")}}
+            ]
+        })
+        return res.status(200).json({
+            notes:matchingNotes,
+            message:"Notes fetched successfully."
+        })
     } catch (error) {
         console.log(error);
         res.status(500).json({error:"Internal server error."});

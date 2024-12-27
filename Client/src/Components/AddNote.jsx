@@ -1,19 +1,47 @@
 import React, { useState } from 'react'
 import InputTags from './InputTags'
 import { RxCross2 } from "react-icons/rx";
-const AddNote = ({noteData, type, onClose}) => {
-    const [title, setTitle] = useState('');
-    const [content, setContent] = useState('');
-    const [tags, setTags] = useState([]);
+import axiosInstance from '../utils/axiosInstance';
+const AddNote = ({noteData, type, onClose, getAllNotes, handleToastShow }) => {
+    const [title, setTitle] = useState(noteData?.title || '');
+    const [content, setContent] = useState(noteData?.content || '');
+    const [tags, setTags] = useState(noteData?.tags || []);
     const [error, setError] = useState(null);
 
 
     const AddNote = async () => {
-        
+        try {
+            const response = await axiosInstance.post('/add-note', { 
+                title: title, 
+                content: content, 
+                tags: tags });
+            if(response.data){
+                getAllNotes();
+                onClose();
+                handleToastShow("Note added successfully.");
+            }
+        } catch (error) {
+            console.log(error);
+            if(error.response&&
+                error.response.data&&
+                error.response.data.message
+            ){
+                setError(error.response.data.message);
+            }
+        }
     }
 
     const editNote = async () => {
-        
+        const noteId = noteData._id;
+        const response = await axiosInstance.put('/edit-note/'+noteId, {
+            title: title,
+            content: content,
+            tags: tags
+        })
+        if(response.data){
+            getAllNotes();
+            onClose();
+        }
     }
     const handleAddNote = () => {
         if(!title){
@@ -69,7 +97,7 @@ const AddNote = ({noteData, type, onClose}) => {
             <button 
             onClick={handleAddNote}
             className='flex items-center justify-center w-full py-2 mt-4 text-white bg-red-600 rounded-md'>
-                Add
+                {type === "edit" ? "Edit" : "Add"}
             </button>
         </div>
     )

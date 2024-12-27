@@ -1,10 +1,12 @@
 import React, { useState } from 'react'
 import { FaEye, FaEyeSlash } from "react-icons/fa";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion'
 import { validateEmail } from '../utils/Helper';
 import TypingAnimation from '../Components/TypingAnimation';
+import axiosInstance from '../utils/axiosInstance';
 const Signup = () => {
+    const navigate = useNavigate();
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
@@ -37,6 +39,26 @@ const Signup = () => {
         setEmailErrorBox(false);
         setUsernameErrorBox(false);
         setPasswordErrorBox(false);
+
+        try {
+            const response = await axiosInstance.post('/create-account', { name: username, email:email.trim(), password:password });
+            if(response.data && response.data.error){
+                setError(response.data.error);
+                return;
+            }
+            if(response.data && response.data.accessToken){
+                localStorage.setItem('accessToken', response.data.accessToken);
+            }
+             navigate('/Dashboard');
+        } catch (error) {
+            if (error.response) {
+                console.log('Response Data:', error.response.data);
+                console.log('Response Status:', error.response.status);
+            } else {
+                console.log('Error:', error.message);
+            }
+            setError('An error occurred. Please try again.');
+        }
     }
     return (
         <>

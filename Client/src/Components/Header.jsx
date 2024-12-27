@@ -4,14 +4,18 @@ import ProfileInfo from '../Components/ProfileInfo'
 import { useNavigate } from 'react-router-dom';
 import SerachBox from '../Components/SerachBox';
 
-const Header = ({userInfo}) => {
+const Header = ({userInfo,onSearch,handleClearSearch}) => {
   const [searchQuery, setSearchQuery] = useState('');
   const navigate = useNavigate();
   const handleSearch = () => {
+    if(searchQuery){
+      onSearch(searchQuery);
+    }
     
   }
   const handleClear = () => {
     setSearchQuery('');
+    handleClearSearch();
   }
   const handleLogout = () => {
     localStorage.clear();
