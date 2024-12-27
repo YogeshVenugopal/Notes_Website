@@ -37,7 +37,7 @@ This is a full-stack Notes Application built using the **MERN** stack (MongoDB, 
 
 ## Installation
 
-### Backend Setup
+### Full Setup
 
 1. Clone the repository:
 
