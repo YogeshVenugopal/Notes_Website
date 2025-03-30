@@ -7,7 +7,7 @@ import NoteRoute from './Routes/Note.route.js'
 
 dotenv.config();
 
-mongoose.connect(process.env.MONGO_URI)
+mongoose.connect(process.env.MONGO_URI,{ useNewUrlParser: true, useUnifiedTopology: false })
 .then(()=>console.log("Connected to MongoDB"))
 .catch((err)=>console.log(err));
 
@@ -16,7 +16,7 @@ const port = process.env.PORT || 5000;
 
 app.use(express.json());
 app.use(cors({
-    origin: '*', // Replace with your frontend's actual URL
+    origin: '*',
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization'],
 }));
